@@ -265,7 +265,22 @@ dotpush "tweak waybar colors"
 
 ---
 
-## `// 12` CREDITS & LICENSE
+## `// 12` GALLERY
+
+<p align="center">
+  <img src="gallery/terminalhaven.png" alt="Terminal" width="100%">
+</p>
+
+<p align="center">
+  <img src="gallery/notifs.png" alt="Notifications" width="49%">
+  <img src="gallery/lock.png" alt="Lock screen" width="49%">
+</p>
+
+<p align="center"><sub>terminal // notifications // lock screen</sub></p>
+
+---
+
+## `// 13` CREDITS & LICENSE
 
 Built on the shoulders of the Hyprland, Waybar, Quickshell, and Arch communities, and the endless inspiration of r/unixporn.
 
