@@ -72,7 +72,7 @@ One palette, used everywhere. Neon on near-black.
 | | Name | Hex | Used for |
 |:-:|:--|:--|:--|
 | ![](https://img.shields.io/badge/-%20%20%20-2de2e6?style=flat-square) | **Cyan** | `#2de2e6` | Commands, directories, prompt arrow, primary accent |
-| ![](https://img.shields.io/badge/-%20%20%20-ff2bd6?style=flat-square) | **Magenta** | `#ff2bd6` | Symlinks, fzf highlights and borders |
+| ![](https://img.shields.io/badge/-%20%20%20-ff2bd6?style=flat-square) | **Bloodred** | `#FB0A26` | Symlinks, fzf highlights and borders |
 | ![](https://img.shields.io/badge/-%20%20%20-fcee0a?style=flat-square) | **Yellow** | `#fcee0a` | Brackets, strings, executables, warnings |
 | ![](https://img.shields.io/badge/-%20%20%20-fb0a26?style=flat-square) | **Red** | `#fb0a26` | Prompt frame, git branch, separators |
 | ![](https://img.shields.io/badge/-%20%20%20-ff3b5c?style=flat-square) | **Alert red** | `#ff3b5c` | Errors, failed-command arrow, unknown tokens |
