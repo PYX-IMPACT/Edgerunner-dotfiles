@@ -157,3 +157,65 @@ menuitem:hover {
   background-color: @rice_org;
   color: #0a0612;
 }
+
+
+/* dialogs: rename, delete confirm, file pickers, etc. */
+window.dialog, window.dialog.background, messagedialog.background {
+  background-color: #0d0818;
+  color: #e8e0ff;
+}
+
+window.dialog label { color: #e8e0ff; }
+
+window.dialog entry,
+window.dialog entry:focus {
+  background-color: #1a1030;
+  color: #e8e0ff;
+  caret-color: #2de2e6;
+  border: 1px solid #ff2bd6;
+  border-radius: 0;
+  box-shadow: none;
+}
+
+window.dialog button {
+  background-image: none;
+  background-color: #1a1030;
+  color: #2de2e6;
+  border: 1px solid #6b5a8a;
+  border-radius: 0;
+  box-shadow: none;
+  text-shadow: none;
+}
+
+window.dialog button:hover { color: #ff2bd6; border-color: #ff2bd6; }
+window.dialog button:disabled { color: #6b5a8a; }
+
+
+window.filechooser, window.filechooser box {
+  background-color: #0d0818;
+  color: #e8e0ff;
+}
+
+placessidebar, placessidebar row,
+window.filechooser treeview.view, window.filechooser .view {
+  background-color: #0d0818;
+  color: #e8e0ff;
+}
+
+placessidebar row:selected, window.filechooser treeview.view:selected {
+  background-color: #1a1030;
+  color: #2de2e6;
+}
+
+window.filechooser headerbar, window.filechooser .titlebar {
+  background-image: none;
+  background-color: #1a1030;
+  color: #e8e0ff;
+}
+
+button.suggested-action {
+  background-image: none;
+  background-color: #ff2bd6;
+  color: #0d0818;
+  border-radius: 0;
+}

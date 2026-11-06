@@ -10,7 +10,7 @@ export EDITOR=fresh
 # ───────── palette ─────────
 typeset -A C
 C[cyan]='#2de2e6'
-C[mred]='#FB0A26'
+C[bred]='#FB0A26'
 C[yel]='#fcee0a'
 C[red]='#ff3b5c'
 C[dim]='#6b5a8a'
@@ -35,7 +35,7 @@ autoload -Uz compinit && compinit -d ~/.cache/zcompdump
 zstyle ':completion:*' menu select
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
-zstyle ':completion:*:descriptions' format "%F{${C[mred]}}── %d ──%f"
+zstyle ':completion:*:descriptions' format "%F{${C[bred]}}── %d ──%f"
 zstyle ':completion:*:warnings'     format "%F{${C[red]}}no matches%f"
 
 # ───────── keys ─────────
@@ -54,7 +54,7 @@ zstyle ':vcs_info:*' enable git
 zstyle ':vcs_info:git:*' check-for-changes true
 zstyle ':vcs_info:git:*' unstagedstr '*'
 zstyle ':vcs_info:git:*' stagedstr '+'
-zstyle ':vcs_info:git:*' formats ' %F{'${C[mred]}'}[%b%F{'${C[yel]}'}%u%c%F{'${C[mred]}'}]%f'
+zstyle ':vcs_info:git:*' formats ' %F{'${C[bred]}'}[%b%F{'${C[yel]}'}%u%c%F{'${C[bred]}'}]%f'
 
 # ───────── command timer ─────────
 zmodload zsh/datetime
@@ -75,11 +75,11 @@ precmd() {
 # ───────── prompt ─────────
 _arrow() { echo "%(?.%F{${C[cyan]}}.%F{${C[red]}})▶%f" }
 
-PROMPT='%F{'${C[mred]}'}┌─%F{'${C[yel]}'}[%F{'${C[cyan]}'} %n%F{'${C[dim]}'}@%F{'${C[cyan]}'}%m %F{'${C[yel]}'}]%F{'${C[mred]}'}─%F{'${C[yel]}'}[%F{'${C[ink]}'} %~ %F{'${C[yel]}'}]%f${vcs_info_msg_0_}
-%F{'${C[mred]}'}└─%f$(_arrow) '
+PROMPT='%F{'${C[bred]}'}┌─%F{'${C[yel]}'}[%F{'${C[cyan]}'} %n%F{'${C[dim]}'}@%F{'${C[cyan]}'}%m %F{'${C[yel]}'}]%F{'${C[bred]}'}─%F{'${C[yel]}'}[%F{'${C[ink]}'} %~ %F{'${C[yel]}'}]%f${vcs_info_msg_0_}
+%F{'${C[bred]}'}└─%f$(_arrow) '
 
 RPROMPT='%F{'${C[red]}'}${_cmd_took}%f %F{'${C[dim]}'}%D{%H:%M}%f'
-PROMPT2="%F{${C[mred]}}  ╎%f "
+PROMPT2="%F{${C[bred]}}  ╎%f "
 
 # ───────── colours for ls / grep ─────────
 export LS_COLORS="di=1;38;2;45;226;230:ln=38;2;255;43;214:ex=1;38;2;252;238;10:so=38;2;255;59;92:*.md=38;2;232;224;255"
@@ -120,10 +120,10 @@ if [[ -f /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.
   ZSH_HIGHLIGHT_STYLES[path]="fg=${C[ink]},underline"
   ZSH_HIGHLIGHT_STYLES[single-quoted-argument]="fg=${C[yel]}"
   ZSH_HIGHLIGHT_STYLES[double-quoted-argument]="fg=${C[yel]}"
-  ZSH_HIGHLIGHT_STYLES[globbing]="fg=${C[mred]}"
+  ZSH_HIGHLIGHT_STYLES[globbing]="fg=${C[bred]}"
   ZSH_HIGHLIGHT_STYLES[comment]="fg=${C[dim]}"
   ZSH_HIGHLIGHT_STYLES[unknown-token]="fg=${C[red]},bold"
-  ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=${C[mred]}"
+  ZSH_HIGHLIGHT_STYLES[commandseparator]="fg=${C[bred]}"
 fi
 
 
