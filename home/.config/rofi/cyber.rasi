@@ -1,0 +1,105 @@
+configuration {
+    show-icons: true;
+    display-drun: "HACK";
+    drun-display-format: "{name}  <span size='x-small' alpha='55%'>{generic}</span>";
+}
+
+* {
+    bg:      #12080a;
+    maroon:  #2a0c10;
+    panel:   #0f262b;
+    coral:   #c84c48;
+    dim:     #7a2a2c;
+    cyan:    #6ee7e7;
+
+    background-color: transparent;
+    text-color:       @cyan;
+    font: "Rajdhani Bold 14";
+}
+
+
+mainbox {
+    padding: 14px;
+    spacing: 8px;
+    expand: false;
+    children: [ textbox-header, textbox-scan, inputbar, listview, textbox-footer ];
+}
+
+textbox-header {
+    expand: false;
+    str: "05 KILO MICROCYBER BATTLEDECK V02 // ADMIN ACCESS";
+    font: "Rajdhani Bold 9";
+    text-color: @cyan;
+    horizontal-align: 1;
+}
+
+textbox-scan {
+    expand: false;
+    str: "SCANNING ...  64%";
+    font: "Rajdhani Bold 10";
+    background-color: @cyan;
+    text-color: @bg;
+    padding: 1px 10px;
+    horizontal-align: 1;
+}
+
+
+
+textbox-scan {
+    str: "SCANNING ...  64%";
+    font: "Rajdhani Bold 10";
+    background-color: @cyan;
+    text-color: @bg;
+    padding: 1px 10px;
+    horizontal-align: 1;
+}
+
+inputbar {
+    background-color: @maroon;
+    border: 1px;
+    border-color: @dim;
+    spacing: 0;
+    children: [ prompt, entry ];
+}
+prompt {
+    background-color: @coral;
+    text-color: @bg;
+    padding: 8px 16px;
+}
+entry {
+    padding: 8px 12px;
+    text-color: @cyan;
+    placeholder: "TYPE TO BREACH //";
+    placeholder-color: @dim;
+}
+
+listview {
+    expand: false;
+    lines: 8;
+    fixed-height: false;
+    scrollbar: false;
+    spacing: 6px;
+    margin: 4px 0 0 0;
+}
+
+element {
+    padding: 9px 12px;
+    background-color: @panel;
+    text-color: @cyan;
+    border: 0 0 0 3px;
+    border-color: @dim;
+}
+element selected.normal {
+    background-color: @coral;
+    text-color: @bg;
+    border-color: @cyan;
+}
+element-icon { size: 1.3em; padding: 0 10px 0 0; background-color: transparent; }
+element-text { background-color: transparent; text-color: inherit; vertical-align: 0.5; }
+
+textbox-footer {
+    expand: false;
+    str: "ROOT@ARCH-LAPTOP : ~ #";
+    font: "Rajdhani Bold 9";
+    text-color: @cyan;
+}

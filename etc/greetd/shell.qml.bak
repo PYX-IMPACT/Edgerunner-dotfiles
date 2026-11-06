@@ -1,0 +1,67 @@
+import QtQuick
+import Quickshell
+import Quickshell.Services.Greetd
+
+FloatingWindow {
+    id: win
+    visible: true
+    color: "#10121c"
+
+    property string stage: "user"
+    
+
+    Connections {
+        target: Greetd
+        
+        function onAuthMessage(message, error, responseRequired, echoResponse) {
+            if (responseRequired) {
+                win.stage = "password"
+                input.text = ""
+                input.forceActiveFocus()
+            }
+        }
+        
+        function onAuthFailure(message) {
+            status.text = "Login failed: " + message
+            win.stage = "user"
+            input.text = ""
+        }
+        
+        function onReadyToLaunch() {
+            Greetd.launch(["start-hyprland"])    
+        }
+        
+    }
+    
+    Column {
+        anchors.centerIn: parent
+        spacing: 12
+
+        Text {
+            text: win.stage === "user" ? "USERNAME" : "PASSWORD"
+            color: "#00f0ff"
+            font.pixelSize: 22
+            font.bold: true
+        }
+
+        TextInput {
+            id: input
+            width: 300
+            color: "white"
+            font.pixelSize: 20
+            focus: true
+            echoMode: win.stage === "password" ? TextInput.Password : TextInput.Normal
+            onAccepted: {
+                if (win.stage === "user"){
+                    Greetd.createSession(text)
+                } else {
+                    Greetd.respond(text)
+                    text = ""
+                }
+            }
+        }
+        
+        Text { id: status; color: "#ff3355"; font.pixelSize: 14 }
+    }
+}
+

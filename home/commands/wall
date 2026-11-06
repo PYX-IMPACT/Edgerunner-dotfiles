@@ -1,0 +1,12 @@
+#!/bin/bash
+
+# 1. If you provided an argument, update Current.jpg to be a copy of that image
+if [ -n "$1" ] && [ -f "$1" ]; then
+    cp "$1" "$HOME/Pictures/Current.jpg"
+fi
+
+# 2. Kill the old background process
+pkill swaybg
+
+# 3. Launch swaybg using the updated Current.jpg
+setsid swaybg -i "$HOME/Pictures/Current.jpg" -m fill >/dev/null 2>&1 &

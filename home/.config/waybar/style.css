@@ -1,0 +1,102 @@
+/* Edgerunners 2 - Waybar (techy cut-corner panels + glitch trace) */
+* {
+ font-family: "Rajdhani", "JetBrainsMono Nerd Font", sans-serif;
+ font-size: 17px;
+ font-weight: 800;
+ border: none;
+ border-radius: 0;
+ min-height: 0;
+ box-shadow: none;
+ text-shadow: none;
+}
+
+window#waybar {
+ background-color: transparent;
+ background-image: url("art/zap.svg");
+ background-size: 100% 100%;
+ background-repeat: no-repeat;
+ color: #e8e8d0;
+}
+
+/* Cut-corner panels: end caps keep their shape, the middle stretches.
+ Padding (14px) must equal the cap width so the middle sits between them. */
+#workspaces, #window, #clock, #stats {
+ margin: 5px 6px 20px 6px;
+ padding: 0 14px;
+ background-repeat: no-repeat;
+ background-origin: border-box, border-box, content-box;
+ background-position: left center, right center, center;
+ background-size: auto 100%, auto 100%, 100% 100%;
+}
+#workspaces {
+ margin-left: 8px;
+ background-image: url("art/cap_l_y.svg"), url("art/cap_r_y.svg"), url("art/mid_y.svg");
+}
+#window {
+ color: #ff2a45;
+ background-image: url("art/cap_l_r.svg"), url("art/cap_r_r.svg"), url("art/mid_r.svg");
+}
+#window.empty {
+ background-image: none;
+ padding: 0;
+ margin: 0;
+}
+/* Clock: three separate pieces with a gap between them.
+ The border is cap width (14px) + gap (6px) = 20px per side: the caps sit at
+ the outer edges, the 6px of transparent border left over is the gap, and the
+ middle fills the padding box (text + 12px padding). To change the gap, change
+ the border-width (14px cap + gap); to widen the clock, change the padding. */
+#clock {
+ color: #0a0a10;
+ letter-spacing: 1px;
+ border-style: solid;
+ border-color: transparent;
+ border-width: 0 20px;
+ padding: 0 12px;
+ background-image: url("art/cap_l_fy.svg"), url("art/cap_r_fy.svg"), url("art/mid_fy.svg");
+ background-origin: border-box, border-box, padding-box;
+ background-size: 14px 100%, 14px 100%, 100% 100%;
+}
+#stats {
+ background-image: url("art/cap_l_y.svg"), url("art/cap_r_y.svg"), url("art/mid_y.svg");
+}
+
+/* workspace buttons */
+#workspaces button {
+ padding: 0 8px;
+ margin: 0;
+ color: #e8e8d0;
+ background-color: transparent;
+ background-image: none;
+}
+#workspaces button:hover { color: #ff2a45; }
+#workspaces button.active {
+ color: #0a0a10;
+ background-color: #fcee09;
+}
+#workspaces button.urgent { color: #ff2a45; }
+
+/* stats */
+#pulseaudio, #network, #cpu, #memory, #battery {
+ padding: 0 10px;
+ background: transparent;
+}
+#pulseaudio { color: #19f0ff; }
+#network { color: #19f0ff; }
+#cpu { color: #fcee09; }
+#memory { color: #ff3d9a; }
+#battery { color: #e8e8d0; }
+#pulseaudio.muted { color: #ff2a45; }
+#network.disconnected { color: #ff2a45; }
+#battery.warning { color: #fcee09; }
+#battery.critical { color: #ff2a45; }
+#battery.charging, #battery.plugged, #battery.full { color: #19f0ff; }
+
+#tray { margin: 3px 8px 11px 0; padding: 0 6px; }
+
+tooltip {
+ background: #0a0a10;
+ border: 1px solid #ff2a45;
+ border-radius: 0;
+}
+tooltip label { color: #e8e8d0; }

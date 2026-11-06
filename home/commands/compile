@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+case "$1" in
+  command)
+    if [ -z "$2" ]; then
+      echo "usage: compile command <name>"
+      exit 1
+    fi
+    if [ ! -f "$HOME/commands/$2" ]; then
+      echo "no such file: ~/commands/$2"
+      exit 1
+    fi
+    chmod +x "$HOME/commands/$2" && echo "$2 is now executable"
+    ;;
+  *)
+    echo "usage: compile command <name>"
+    ;;
+esac

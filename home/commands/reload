@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+case "$1" in
+  waybar)
+    killall waybar
+    setsid waybar >/dev/null 2>&1 &
+    ;;
+  *)
+    echo "usage: reload {waybar}"
+    ;;
+esac

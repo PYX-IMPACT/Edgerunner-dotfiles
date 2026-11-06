@@ -1,0 +1,159 @@
+/* ~/.config/gtk-3.0/gtk.css  //  Thunar, Edgerunners S2 palette */
+
+@define-color rice_bg   #0a0612;
+@define-color rice_surf #1a1030;
+@define-color rice_ink  #e8e0ff;
+@define-color rice_dim  #8a76b0;
+@define-color rice_cyan #2de2e6;
+@define-color rice_mag  #ff2bd6;
+@define-color rice_yel  #fcee09;
+@define-color rice_red  #ff3b5c;
+@define-color rice_org  #ff9f1c;
+
+/* font + sharp corners everywhere in Thunar */
+.thunar * {
+  font-family: "JetBrainsMono Nerd Font", "JetBrains Mono", monospace;
+  font-weight: bold;
+  font-size: 13px;
+  border-radius: 0;
+}
+
+/* window: semi-transparent dark. Backdrop = unfocused, kept identical so nothing flips */
+.thunar,
+.thunar:backdrop {
+  background-color: rgba(10, 6, 18, 0.88);
+  color: @rice_ink;
+}
+
+/* MENU BAR (File Edit View Go Bookmarks Help)
+   this was unstyled before, so the theme's light default showed when unfocused */
+.thunar menubar,
+.thunar menubar:backdrop {
+  background-color: rgba(10, 6, 18, 0.93);
+  background-image: none;
+  border: none;
+  border-bottom: 1px solid @rice_red;
+  box-shadow: none;
+}
+.thunar menubar > menuitem,
+.thunar menubar > menuitem:backdrop {
+  background: none;
+  color: @rice_cyan;
+}
+.thunar menubar > menuitem:backdrop {
+  color: @rice_dim;
+}
+.thunar menubar > menuitem:hover,
+.thunar menubar > menuitem:selected {
+  background-color: @rice_org;
+  color: #0a0612;
+}
+
+/* sidebar */
+.thunar .shortcuts-pane,
+.thunar .shortcuts-pane .view,
+.thunar .shortcuts-pane .view:backdrop,
+.thunar treeview {
+  background-color: transparent;
+  color: @rice_ink;
+}
+.thunar .shortcuts-pane .view:hover {
+  background-color: rgba(255, 43, 214, 0.18);
+  color: @rice_mag;
+}
+.thunar .shortcuts-pane .view:selected,
+.thunar .shortcuts-pane .view:selected:backdrop {
+  background-color: @rice_yel;
+  color: #0a0a10;
+}
+
+/* main file view */
+.thunar .standard-view .view,
+.thunar .standard-view .view:backdrop {
+  background-color: transparent;
+  color: @rice_ink;
+}
+.thunar .standard-view .view:hover {
+  background-color: rgba(255, 159, 28, 0.15);
+}
+.thunar .standard-view .view:selected,
+.thunar .standard-view .view:selected:backdrop {
+  background-color: @rice_mag;
+  color: #0a0612;
+}
+.thunar rubberband {
+  border: 1px solid @rice_org;
+  background-color: rgba(255, 159, 28, 0.2);
+}
+
+/* toolbar / location bar */
+.thunar toolbar,
+.thunar toolbar:backdrop {
+  background-color: rgba(10, 6, 18, 0.93);
+  background-image: none;
+  border-bottom: 1px solid @rice_cyan;
+  box-shadow: none;
+}
+.thunar toolbar button,
+.thunar .path-bar-button {
+  background: none;
+  border: 1px solid transparent;
+  box-shadow: none;
+  color: @rice_cyan;
+}
+.thunar toolbar button:backdrop,
+.thunar .path-bar-button:backdrop {
+  color: @rice_dim;
+}
+.thunar toolbar button:hover,
+.thunar .path-bar-button:hover {
+  border-color: @rice_org;
+  background-color: rgba(255, 159, 28, 0.15);
+  color: @rice_org;
+}
+.thunar .path-bar-button:checked {
+  background-color: @rice_yel;
+  color: #0a0a10;
+}
+.thunar toolbar entry,
+.thunar toolbar entry:backdrop {
+  background-color: rgba(26, 16, 48, 0.9);
+  color: @rice_ink;
+  border: 1px solid @rice_yel;
+  box-shadow: 0 0 8px rgba(252, 238, 9, 0.35);
+}
+.thunar toolbar entry:backdrop {
+  border-color: @rice_dim;
+  box-shadow: none;
+}
+
+/* status bar */
+.thunar statusbar,
+.thunar statusbar:backdrop {
+  background-color: rgba(10, 6, 18, 0.93);
+  color: @rice_dim;
+  border-top: 1px solid @rice_red;
+}
+
+/* scrollbars */
+.thunar scrollbar { background: transparent; border: none; }
+.thunar scrollbar slider {
+  background-color: @rice_red;
+  min-width: 4px;
+  min-height: 4px;
+}
+.thunar scrollbar slider:hover {
+  background-color: @rice_org;
+}
+
+/* right-click and menu-bar dropdowns (affects every GTK3 app) */
+menu, .popup menu {
+  background-color: #0a0612;
+  color: @rice_ink;
+  border: 1px solid @rice_org;
+  border-radius: 0;
+}
+menuitem:hover {
+  background-color: @rice_org;
+  color: #0a0612;
+}

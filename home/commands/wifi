@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+CONN="Telstra778E28"
+
+case "$1" in
+  down)  nmcli connection down "$CONN" ;;
+  up)    nmcli connection up "$CONN" ;;
+  reset) nmcli connection down "$CONN" && nmcli connection up "$CONN" ;;
+  *)     echo "usage: wifi {up|down|reset}" ;;
+esac

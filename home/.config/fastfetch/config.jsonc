@@ -1,0 +1,8 @@
+{
+  "logo": { "type": "builtin", "source": "arch", "color": { "1": "38;2;45;226;230", "2": "38;2;255;43;214" } },
+  "display": {
+    "separator": " ▶ ",
+    "color": { "keys": "38;2;252;238;10", "separator": "38;2;255;43;214", "title": "38;2;45;226;230" }
+  },
+  "modules": ["title", "break", "os", "kernel", "uptime", "packages", "shell", "wm", "terminal", "cpu", "gpu", "memory", "break", "colors"]
+}

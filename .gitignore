@@ -1,0 +1,7 @@
+home/commands/dotsync
+mozilla/
+spotify/
+pulse/
+session/
+*.key
+.env

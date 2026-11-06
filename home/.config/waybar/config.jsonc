@@ -1,0 +1,70 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 40,
+    "spacing": 0,
+
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["group/stats", "tray"],
+
+    "hyprland/workspaces": {
+        "format": "{id}",
+        "on-click": "activate"
+    },
+
+    "hyprland/window": {
+        "format": "// {title}",
+        "max-length": 50,
+        "separate-outputs": true
+    },
+
+    "clock": {
+        "format": "{:%I:%M %p}",
+        "format-alt": "{:%A %d %B %Y}",
+        "tooltip": false,
+        "spacing": 10,
+    },
+
+    "group/stats": {
+        "orientation": "horizontal",
+        "modules": ["pulseaudio", "network", "cpu", "memory", "battery"]
+    },
+
+    "pulseaudio": {
+        "format": "VOL {volume}%",
+        "format-muted": "VOL MUTE",
+        "on-click": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "scroll-step": 5
+    },
+
+    "network": {
+        "format-wifi": "NET {essid}",
+        "format-ethernet": "NET LAN",
+        "format-disconnected": "NET OFF",
+        "tooltip-format": "{ipaddr}  {signalStrength}%"
+    },
+
+    "cpu": {
+        "format": "CPU {usage}%",
+        "interval": 3
+    },
+
+    "memory": {
+        "format": "RAM {percentage}%",
+        "interval": 5
+    },
+
+    "battery": {
+        "format": "BAT {capacity}%",
+        "format-charging": "AC CHG {capacity}%",
+        "format-plugged": "AC {capacity}%",
+        "format-full": "AC FULL",
+        "tooltip-format": "{timeTo}",
+        "states": { "warning": 30, "critical": 15 }
+    },
+
+    "tray": {
+        "spacing": 8
+    }
+}

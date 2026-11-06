@@ -1,0 +1,9 @@
+[Unit]
+Description=Auto chmod new scripts in ~/commands
+
+[Service]
+ExecStart=%h/commands/watchcmds
+Restart=always
+
+[Install]
+WantedBy=default.target

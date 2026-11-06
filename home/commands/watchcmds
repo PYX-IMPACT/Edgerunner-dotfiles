@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+DIR="$HOME/commands"
+
+inotifywait -m -q -e create -e moved_to -e close_write --format '%f' "$DIR" | while read -r name; do
+  case "$name" in .*) continue ;; esac
+  [ -f "$DIR/$name" ] || continue
+  [ -x "$DIR/$name" ] && continue
+  "$DIR/compile" command "$name"
+done
+

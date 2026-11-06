@@ -1,0 +1,7 @@
+[terminal]
+vt = 1
+
+[default_session]
+command = "env QT_WAYLAND_DISABLE_WINDOWDECORATION=1 cage -s -d -- quickshell -p /etc/greetd/shell.qml"
+command = "env XKB_DEFAULT_OPTIONS=numpad:mac QT_WAYLAND_DISABLE_WINDOWDECORATION=1 cage -s -d -- quickshell -p /etc/greetd/shell.qml"
+user = "greeter"
