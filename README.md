@@ -230,9 +230,12 @@ These need `sudo`, and a mistake in `greetd` can leave you without a graphical l
 
 | Keys | Action |
 |:--|:--|
-| `SUPER + Enter` | Open terminal |
-| `SUPER + D` | Open launcher |
+| `SUPER + Tab` | Open terminal |
+| `SUPER + R` | Open launcher |
 | `SUPER + Q` | Close window |
+| `SUPER + W` | Open Firefox |
+| `SUPER + E` | Open Thunar |
+
 
 *Placeholder values. Replace with the real binds from the Hyprland config.*
 
