@@ -317,11 +317,13 @@ Feel free to take whatever's useful. A star is appreciated but never required.
 
 **`background`** <a href="https://wallhaven.cc/w/o599zp">https://whvn.cc/o599zp</a> by zireael
 
-<div align="center">
+
 
 ---
 
 ## `// 15` KOFI Support
+
+<div align="center">
 
 [![Ko-fi](Gallery/kofi-badge.svg)](https://ko-fi.com/pyx_impact)
 
