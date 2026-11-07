@@ -5,3 +5,9 @@ pulse/
 session/
 *.key
 .env
+home/Pictures/*
+!home/Pictures/Current.jpg
+home/.config/BetterDiscord/*
+!home/.config/BetterDiscord/themes/
+home/.config/BetterDiscord/themes/*
+!home/.config/BetterDiscord/themes/Edgerunner.theme.css
