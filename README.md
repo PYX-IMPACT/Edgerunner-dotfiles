@@ -21,14 +21,6 @@
 
 </div>
 
-<!-- TODO: add screenshots. Drop images in a `screenshots/` folder and uncomment: -->
-<!--
-<p align="center">
-  <img src="screenshots/desktop.png" width="49%">
-  <img src="screenshots/terminal.png" width="49%">
-</p>
--->
-
 ---
 
 ## `// 00` SYSTEM OVERVIEW
@@ -127,7 +119,7 @@ cd /tmp/yay && makepkg -si
 **2. Clone the repo:**
 
 ```bash
-git clone https://github.com/YOURUSERNAME/Edgerunner-dotfiles ~/Edgerunner-dotfiles
+git clone https://github.com/PYX-IMPACT/Edgerunner-dotfiles ~/Edgerunner-dotfiles
 cd ~/Edgerunner-dotfiles
 ```
 
@@ -202,10 +194,7 @@ yay  pacseek  fresh
 
 **Fonts:** the prompt uses box-drawing characters and `eza --icons` needs glyphs, so you need a **Nerd Font**.
 
-<!-- TODO: name the exact font you use, e.g. "JetBrainsMono Nerd Font" -->
-> Font used: **`YOUR NERD FONT HERE`**
-
-Without it, you'll see empty squares where the icons should be.
+> Font used: **`JetBrainsMono Nerd Font`**
 
 ---
 
@@ -226,8 +215,6 @@ These need `sudo`, and a mistake in `greetd` can leave you without a graphical l
 
 ## `// 09` KEYBINDINGS
 
-<!-- TODO: fill this in from home/.config/hypr/hyprland.conf -->
-
 | Keys | Action |
 |:--|:--|
 | `SUPER + Tab` | Open terminal |
@@ -235,9 +222,6 @@ These need `sudo`, and a mistake in `greetd` can leave you without a graphical l
 | `SUPER + Q` | Close window |
 | `SUPER + W` | Open Firefox |
 | `SUPER + E` | Open Thunar |
-
-
-*Placeholder values. Replace with the real binds from the Hyprland config.*
 
 ---
 
@@ -288,8 +272,6 @@ dotpush "tweak waybar colors"
 Built on the shoulders of the Hyprland, Waybar, Quickshell, and Arch communities, and the endless inspiration of r/unixporn.
 
 Feel free to take whatever's useful. A star is appreciated but never required.
-
-<!-- TODO: add a LICENSE file (MIT is a common choice for dotfiles) and wallpaper credits if you ship images you didn't make. -->
 
 <div align="center">
 
