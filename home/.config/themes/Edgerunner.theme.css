@@ -1,0 +1,436 @@
+/**
+ * @name Edgerunners
+ * @author L
+ * @description Cyberpunk Edgerunners-inspired Discord theme: dark violet base, hot red accents, cyan HUD highlights, cut-corner panels.
+ * @version 1.0.0
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap');
+
+/* ---------- Palette (edit these to recolour everything) ---------- */
+:root {
+    --er-red: #ff2a55;
+    --er-red-rgb: 255, 42, 85;
+    --er-cyan: #5cf2ff;
+    --er-cyan-rgb: 92, 242, 255;
+    --er-yellow: #f5e100;
+    --er-orange: #ff8a00;
+
+    --er-bg-0: #06030a;
+    --er-bg-1: #0c0713;
+    --er-bg-2: #130a1c;
+    --er-bg-3: #1c0f28;
+
+    --er-text: #d9d3e3;
+    --er-muted: #8b7f9c;
+
+    --er-cut: 12px; /* size of the angled corners */
+}
+
+.theme-dark,
+.theme-darker,
+.theme-midnight,
+.theme-light {
+    --font-primary: 'Rajdhani', sans-serif;
+    --font-display: 'Rajdhani', sans-serif;
+    --font-headline: 'Rajdhani', sans-serif;
+    --font-code: 'Share Tech Mono', monospace;
+
+    /* Surfaces */
+    --background-primary: var(--er-bg-1);
+    --background-secondary: var(--er-bg-0);
+    --background-secondary-alt: var(--er-bg-0);
+    --background-tertiary: #030106;
+    --background-floating: var(--er-bg-2);
+    --background-accent: var(--er-bg-3);
+    --background-base-low: var(--er-bg-1);
+    --background-base-lower: var(--er-bg-0);
+    --background-base-lowest: #030106;
+    --background-surface-high: var(--er-bg-2);
+    --background-surface-higher: var(--er-bg-3);
+    --background-surface-highest: #261535;
+    --chat-background-default: var(--er-bg-1);
+    --channeltextarea-background: var(--er-bg-2);
+    --input-background: var(--er-bg-0);
+    --deprecated-card-bg: var(--er-bg-2);
+    --deprecated-store-bg: var(--er-bg-0);
+
+    /* Hover / active states */
+    --background-modifier-hover: rgba(var(--er-red-rgb), .07);
+    --background-modifier-active: rgba(var(--er-red-rgb), .12);
+    --background-modifier-selected: rgba(var(--er-red-rgb), .16);
+    --background-modifier-accent: rgba(var(--er-red-rgb), .18);
+    --background-mod-subtle: rgba(var(--er-red-rgb), .07);
+    --background-mod-normal: rgba(var(--er-red-rgb), .12);
+    --background-mod-strong: rgba(var(--er-red-rgb), .18);
+
+    /* Text */
+    --text-normal: var(--er-text);
+    --text-default: var(--er-text);
+    --text-strong: #fff;
+    --text-muted: var(--er-muted);
+    --text-link: var(--er-cyan);
+    --header-primary: #fff;
+    --header-secondary: #b9aecb;
+    --interactive-normal: #b9aecb;
+    --interactive-hover: #fff;
+    --interactive-active: var(--er-red);
+    --interactive-muted: #4a3d5c;
+    --channels-default: #9c90ad;
+
+    /* Accent */
+    --brand-experiment: var(--er-red);
+    --brand-experiment-500: var(--er-red);
+    --brand-500: var(--er-red);
+    --brand-360: var(--er-red);
+    --brand-400: #ff5575;
+    --brand-560: #d41d45;
+    --brand-600: #b5173a;
+    --text-brand: var(--er-red);
+    --mention-foreground: var(--er-yellow);
+    --mention-background: rgba(245, 225, 0, .12);
+
+    /* Borders */
+    --border-subtle: rgba(var(--er-red-rgb), .15);
+    --border-normal: rgba(var(--er-red-rgb), .3);
+
+    /* Status colours */
+    --status-online: var(--er-cyan);
+    --status-idle: var(--er-yellow);
+    --status-dnd: var(--er-red);
+    --status-offline: #4a3d5c;
+    --status-positive: var(--er-cyan);
+    --status-warning: var(--er-yellow);
+    --status-danger: var(--er-red);
+
+    /* Scrollbars */
+    --scrollbar-thin-thumb: rgba(var(--er-red-rgb), .6);
+    --scrollbar-thin-track: transparent;
+    --scrollbar-auto-thumb: rgba(var(--er-red-rgb), .6);
+    --scrollbar-auto-track: var(--er-bg-0);
+    --scrollbar-auto-scrollbar-color-thumb: rgba(var(--er-red-rgb), .6);
+    --scrollbar-auto-scrollbar-color-track: var(--er-bg-0);
+}
+
+body,
+button,
+input,
+textarea {
+    font-family: 'Rajdhani', sans-serif !important;
+    letter-spacing: .02em;
+}
+
+::selection {
+    background: var(--er-red);
+    color: #000;
+}
+
+/* ---------- Background ---------- */
+[class*="chatContent_"],
+[class*="chat_"] > [class*="content_"] {
+    background:
+        radial-gradient(ellipse at 100% 0%, rgba(var(--er-cyan-rgb), .06), transparent 45%),
+        linear-gradient(180deg, rgba(var(--er-red-rgb), .06) 0%, transparent 35%),
+        var(--er-bg-1);
+}
+
+/* Scanline overlay: delete this block if you want a clean look */
+body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    pointer-events: none;
+    background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .22) 0 1px, transparent 1px 3px);
+    opacity: .3;
+}
+
+/* ---------- Scrollbars ---------- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+    background: rgba(var(--er-red-rgb), .55);
+    border: none;
+    border-radius: 0;
+}
+::-webkit-scrollbar-thumb:hover { background: var(--er-red); }
+
+/* ---------- Server list & sidebar ---------- */
+nav[class*="guilds_"],
+[class*="guilds_"] {
+    background: #030106;
+    border-right: 1px solid var(--border-subtle);
+}
+
+[class*="sidebar_"] {
+    background: linear-gradient(180deg, rgba(var(--er-red-rgb), .08), transparent 40%), var(--er-bg-0);
+    border-right: 1px solid var(--border-subtle);
+}
+
+/* Channel and DM rows */
+[class*="containerDefault_"] [class*="interactive_"],
+[class*="channel_"][class*="container_"] {
+    border-radius: 0;
+    transition: background .12s, box-shadow .12s;
+}
+
+[class*="interactive_"][class*="selected_"],
+[class*="interactiveSelected_"] {
+    background: linear-gradient(90deg, rgba(var(--er-red-rgb), .22), transparent) !important;
+    box-shadow: inset 3px 0 0 var(--er-red);
+    color: #fff !important;
+}
+
+[class*="interactive_"]:hover {
+    box-shadow: inset 2px 0 0 rgba(var(--er-red-rgb), .7);
+}
+
+[class*="name_"][class*="unread"],
+[class*="channel_"][class*="unread"] [class*="name_"] {
+    color: #fff;
+}
+
+/* ---------- Server / user avatars ---------- */
+img[class*="avatar"],
+[class*="avatar_"] [class*="mask_"],
+[class*="avatarStack"] img {
+    border-radius: 3px !important;
+}
+
+[class*="wrapper_"] > [class*="svg_"] foreignObject,
+[class*="listItem_"] [class*="icon_"] {
+    border-radius: 4px !important;
+}
+
+/* Active server marker */
+[class*="pill_"] span,
+[class*="item_"][class*="wrapper_"] > span {
+    background: var(--er-red) !important;
+    box-shadow: 0 0 8px var(--er-red);
+}
+
+/* ---------- Header bars ---------- */
+[class*="title_"][class*="container_"],
+section[class*="title_"],
+[class*="chat_"] > [class*="title_"] {
+    background: rgba(var(--er-red-rgb), .04);
+    border-bottom: 1px solid var(--border-normal);
+    box-shadow: none;
+}
+
+[class*="titleWrapper_"] h1,
+[class*="title_"] [class*="name_"] {
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    font-weight: 700;
+}
+
+/* ---------- Messages ---------- */
+[class*="message_"][class*="cozy"]:hover,
+[class*="messageListItem_"] [class*="message_"]:hover {
+    background: rgba(var(--er-red-rgb), .045);
+    box-shadow: inset 2px 0 0 var(--er-red);
+}
+
+[class*="mentioned_"] {
+    background: rgba(245, 225, 0, .07) !important;
+    box-shadow: inset 2px 0 0 var(--er-yellow) !important;
+}
+
+[class*="username_"] {
+    font-weight: 700;
+    letter-spacing: .04em;
+}
+
+[class*="timestamp_"] {
+    font-family: 'Share Tech Mono', monospace !important;
+    font-size: .72rem;
+    color: var(--er-muted);
+}
+
+[class*="divider_"][class*="isUnread"],
+[class*="newMessagesBar_"],
+[class*="divider_"] [class*="unreadPill_"] {
+    border-color: var(--er-red) !important;
+    color: var(--er-red) !important;
+}
+
+/* ---------- Chat input ---------- */
+[class*="channelTextArea_"] {
+    border: 1px solid var(--border-normal);
+    border-radius: 0;
+    background: var(--er-bg-2);
+    clip-path: polygon(
+        0 0, calc(100% - var(--er-cut)) 0, 100% var(--er-cut),
+        100% 100%, var(--er-cut) 100%, 0 calc(100% - var(--er-cut))
+    );
+    transition: border-color .15s;
+}
+
+[class*="channelTextArea_"]:focus-within {
+    border-color: var(--er-red);
+    background: linear-gradient(90deg, rgba(var(--er-red-rgb), .1), var(--er-bg-2) 40%);
+}
+
+/* ---------- Buttons ---------- */
+button[class*="colorBrand"],
+button[class*="lookFilled"][class*="colorBrand"] {
+    background: var(--er-red) !important;
+    color: #000 !important;
+    border-radius: 0 !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
+    transition: filter .12s, transform .12s;
+}
+
+button[class*="colorBrand"]:hover {
+    filter: brightness(1.2) drop-shadow(0 0 6px var(--er-red));
+}
+
+button[class*="colorGreen"] {
+    background: var(--er-cyan) !important;
+    color: #000 !important;
+    border-radius: 0 !important;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+button[class*="colorRed"],
+button[class*="colorCritical"] {
+    border-radius: 0 !important;
+    text-transform: uppercase;
+    font-weight: 700;
+}
+
+button[class*="lookOutlined"],
+button[class*="lookFilled"][class*="colorPrimary"],
+button[class*="colorPrimary"] {
+    border-radius: 0 !important;
+    border: 1px solid var(--border-normal) !important;
+    background: transparent !important;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+}
+
+/* ---------- Inputs and search ---------- */
+input[class*="inputDefault_"],
+input[class*="input_"],
+[class*="searchBar_"],
+[class*="quickswitcher"] input {
+    background: var(--er-bg-0) !important;
+    border: 1px solid var(--border-normal) !important;
+    border-radius: 0 !important;
+    color: #fff;
+}
+
+input[class*="inputDefault_"]:focus,
+input[class*="input_"]:focus {
+    border-color: var(--er-red) !important;
+    box-shadow: 0 0 0 1px rgba(var(--er-red-rgb), .4);
+}
+
+/* ---------- Popouts, menus, tooltips, modals ---------- */
+[class*="menu_"],
+[class*="popout_"],
+[class*="layer_"] [class*="container_"][class*="theme"],
+[class*="tooltip_"][class*="tooltip"],
+[class*="modal_"][class*="root"],
+[class*="root_"][class*="small"],
+[class*="root_"][class*="medium"] {
+    background: var(--er-bg-2) !important;
+    border: 1px solid var(--border-normal) !important;
+    border-radius: 0 !important;
+    box-shadow: 0 0 24px rgba(var(--er-red-rgb), .12), 0 8px 24px rgba(0, 0, 0, .7);
+}
+
+[class*="tooltip_"][class*="tooltip"] {
+    border-color: var(--er-cyan) !important;
+    text-transform: uppercase;
+    letter-spacing: .06em;
+    font-weight: 600;
+}
+
+[class*="menu_"] [class*="item_"]:hover,
+[class*="menu_"] [class*="focused_"] {
+    background: rgba(var(--er-red-rgb), .2) !important;
+    color: #fff !important;
+    border-radius: 0 !important;
+    box-shadow: inset 2px 0 0 var(--er-red);
+}
+
+[class*="backdrop_"] {
+    background: rgba(3, 1, 6, .8) !important;
+}
+
+/* ---------- Profile card / user area ---------- */
+[class*="panels_"] [class*="container_"],
+section[class*="panels_"] {
+    background: var(--er-bg-0);
+    border-top: 1px solid var(--border-normal);
+}
+
+[class*="membersWrap_"],
+[class*="members_"] {
+    background: var(--er-bg-0);
+    border-left: 1px solid var(--border-subtle);
+}
+
+[class*="membersGroup_"] {
+    text-transform: uppercase;
+    letter-spacing: .12em;
+    color: var(--er-red);
+    font-weight: 700;
+}
+
+/* ---------- Badges, switches, misc ---------- */
+[class*="numberBadge_"],
+[class*="textBadge_"],
+[class*="unreadMentionsIndicator"] {
+    background: var(--er-red) !important;
+    color: #000 !important;
+    border-radius: 2px !important;
+    font-weight: 700;
+}
+
+[class*="unread_"][class*="Pill"],
+[class*="item_"] [class*="unread_"] {
+    background: var(--er-red);
+}
+
+[class*="control_"][class*="checked"] [class*="slider_"],
+[class*="checked_"] {
+    background-color: var(--er-red) !important;
+}
+
+[class*="markup_"] code,
+code.inline {
+    font-family: 'Share Tech Mono', monospace !important;
+    background: var(--er-bg-0) !important;
+    border: 1px solid var(--border-subtle);
+    border-radius: 0 !important;
+}
+
+pre code.hljs {
+    background: var(--er-bg-0) !important;
+    border: 1px solid var(--border-normal) !important;
+    border-left: 3px solid var(--er-red) !important;
+    border-radius: 0 !important;
+}
+
+[class*="markup_"] a,
+[class*="anchor_"] {
+    color: var(--er-cyan);
+}
+
+[class*="embedWrapper_"] {
+    border-radius: 0 !important;
+    background: var(--er-bg-2) !important;
+    border-left-color: var(--er-red) !important;
+}
+
+/* Quote bar */
+[class*="blockquoteDivider_"] {
+    background: var(--er-red);
+}
