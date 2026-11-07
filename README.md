@@ -315,6 +315,20 @@ Built on the shoulders of the Hyprland, Waybar, Quickshell, and Arch communities
 
 Feel free to take whatever's useful. A star is appreciated but never required.
 
+
+>**`[ CREDIT REQUESTED ]`**
+>
+> Planning on showcasing or using this publicly? Credit is the best way to help this reach more people. Tag the me using one of the links below, choom.
+
+<div align="center">
+
+[![GitHub](https://img.shields.io/badge/GITHUB-PYX--IMPACT-fcee0a?style=for-the-badge&logo=github&logoColor=black&labelColor=0a0a0f)](https://github.com/PYX-IMPACT)
+[![Ko-fi](https://img.shields.io/badge/KO--FI-SUPPORT_THE_NETRUNNER-ff003c?style=for-the-badge&logo=kofi&logoColor=white&labelColor=0a0a0f)](https://ko-fi.com/pyx_impact)
+
+</div>
+
+
+
 **`background`** <a href="https://wallhaven.cc/w/o599zp">https://whvn.cc/o599zp</a> by zireael
 
 
