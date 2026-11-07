@@ -322,8 +322,8 @@ Feel free to take whatever's useful. A star is appreciated but never required.
 
 <div align="center">
 
-[![GitHub](https://img.shields.io/badge/GITHUB-PYX--IMPACT-fcee0a?style=for-the-badge&logo=github&logoColor=black&labelColor=0a0a0f)](https://github.com/PYX-IMPACT)
-[![Ko-fi](https://img.shields.io/badge/KO--FI-SUPPORT_THE_NETRUNNER-ff003c?style=for-the-badge&logo=kofi&logoColor=white&labelColor=0a0a0f)](https://ko-fi.com/pyx_impact)
+[![GitHub](https://img.shields.io/badge/GITHUB-PYX--IMPACT-fcee0a?style=for-the-badge&logo=github&logoColor=white&labelColor=0a0a0f)](https://github.com/PYX-IMPACT)
+[![Ko-fi](https://img.shields.io/badge/KO--FI-PYX__IMPACT-ff003c?style=for-the-badge&logo=kofi&logoColor=white&labelColor=0a0a0f)](https://ko-fi.com/pyx_impact)
 
 </div>
 
