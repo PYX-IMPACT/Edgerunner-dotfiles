@@ -9,7 +9,7 @@
 #   ./install.sh update       pull latest from git + sync changes (no uninstall needed)
 #   ./install.sh pull         copy your LIVE configs (hyprland.lua, quickshell, kitty, ...) into the repo
 #   ./install.sh status       show what's installed + where the backup lives
-#   add -y / --yes to skip prompts,  NO_COLOR=1 for plain output
+#   add -y / --yes to skip prompts,  --fast to skip animations,  NO_COLOR=1 for plain output
 #
 # Repo layout:
 #   home/   -> ~/        (home/.config/hypr/hyprland.lua, home/commands/, ...)
@@ -47,64 +47,142 @@ YES=0
 SKIP_PULL=0
 
 # ================================================================== UI ====
-# Cyberpunk palette (256-colour). Falls back to plain text without a tty.
+# Netrunner theme: dark-red HUD windows, yellow accents, datamosh glitches.
+# Animations only run on a real terminal. --fast, NO_ANIM=1 or NO_COLOR=1 turn them off.
 if [[ -t 1 && -z ${NO_COLOR:-} ]]; then FANCY=1; else FANCY=0; fi
-C_Y='38;5;226'   # edgerunner yellow
-C_C='38;5;51'    # cyan
-C_M='38;5;201'   # magenta
-C_G='38;5;46'    # green
-C_R='38;5;196'   # red
-C_D='38;5;244'   # dim grey
-W=66             # panel width
+ANIM=$FANCY; [[ -n ${NO_ANIM:-} ]] && ANIM=0
+EL=''; CR=''; if ((FANCY)); then EL=$'\e[K'; CR=$'\r\e[K'; fi   # erase-line codes (empty when piped)
+C_R='38;5;196'    # alert red
+C_R2='38;5;124'   # dark red (HUD borders)
+C_P='38;5;204'    # neon pink-red
+C_Y='38;5;226'    # warning yellow (the little crosses)
+C_W='38;5;231'    # white flash
+C_T='38;5;252'    # panel text grey
+C_D='38;5;240'    # dim grey
+C_OK='38;5;114'   # muted green for success
+C_C=$C_P; C_M=$C_R; C_G=$C_OK     # names used elsewhere in the script
+W=66              # panel width
+GLY=(▓ ▒ ░ █ ▌ ▐ ╳ ┼ ╬ 0 1 A F 7 '#' '%' '&' '@' '/')
+BAR=(▏ ▎ ▍ ▌ ▋ ▊ █)
 
 c() { if ((FANCY)); then printf '\e[%sm%s\e[0m' "$1" "$2"; else printf '%s' "$2"; fi; }
-info() { echo "  $(c "$C_C" '::') $*"; }
-ok()   { echo "  $(c "$C_G" '✔') $*"; }
-warn() { ((FANCY)) && printf '\r\e[K' >&2 || true; echo "  $(c "$C_Y" '!!') $*" >&2; }
-die()  { show_cursor; echo "  $(c "$C_R" '✘') $*" >&2; exit 1; }
+info() { echo "  $(c "$C_R" '>>') $*"; }
+ok()   { echo "  $(c "$C_D" '[') $(c "1;$C_Y" 'OK') $(c "$C_D" ']') $*"; }
+warn() { ((FANCY)) && printf '\r\e[K' >&2 || true; echo "  $(c "$C_D" '[') $(c "1;$C_P" '!!') $(c "$C_D" ']') $*" >&2; }
+die()  { show_cursor; echo "  $(c "$C_D" '[') $(c "1;$C_R" 'FAIL') $(c "$C_D" ']') $*" >&2; exit 1; }
 hide_cursor() { ((FANCY)) && printf '\e[?25l' || true; }
 show_cursor() { ((FANCY)) && printf '\e[?25h' || true; }
 
 rep() { local s="" i; for ((i=0;i<$2;i++)); do s+=$1; done; printf '%s' "$s"; }
 
-banner_row() { # banner_row <plain text> <coloured text>
-  local pad=$((W-4-${#1}))
-  echo "  $(c "$C_Y" '▌')  $2$(rep ' ' "$pad")$(c "$C_Y" '▐')"
+glitch() { # glitch <text> <percent>  -> text with some characters corrupted
+  local t=$1 p=$2 out="" i ch
+  for ((i=0; i<${#t}; i++)); do
+    ch=${t:i:1}
+    if [[ $ch != ' ' ]] && ((RANDOM%100 < p)); then out+=${GLY[RANDOM%${#GLY[@]}]}; else out+=$ch; fi
+  done
+  printf '%s' "$out"
 }
+hexline() {
+  local o _; o=$(printf '0x%04X ' $((RANDOM%65536)))
+  for _ in 1 2 3 4 5 6 7 8 9 10 11 12; do o+=$(printf ' %02X' $((RANDOM%256))); done
+  printf '%s' "$o"
+}
+flash() { # flash <text> <colour>  -> decrypt-in-place effect
+  local p
+  if ((ANIM)); then
+    for p in 90 65 40 15; do printf '\r\e[K  %s %s' "$(c "$C_R" '▌▌')" "$(c "1;$2" "$(glitch "$1" "$p")")"; sleep 0.04; done
+  fi
+  printf '%s  %s %s\n' "$CR" "$(c "$C_R" '▌▌')" "$(c "1;$2" "$1")"
+}
+
+logo() {
+  local rows=('╔═╗╔╦╗╔═╗╔═╗╦═╗╦ ╦╔╗╔╔╗╔╔═╗╦═╗'
+              '║╣  ║║║ ╦║╣ ╠╦╝║ ║║║║║║║║╣ ╠╦╝'
+              '╚═╝═╩╝╚═╝╚═╝╩╚═╚═╝╝╚╝╝╚╝╚═╝╩╚═')
+  local f r off p line col
+  if ((ANIM)); then
+    hide_cursor
+    for f in 1 2 3 4 5 6 7; do
+      for r in 0 1 2; do
+        p=$(( (7-f)*6 )); off=0; col="1;$C_R"
+        if ((f < 6 && RANDOM%100 < 55)); then off=$((RANDOM%9)); fi
+        if ((f < 5 && RANDOM%100 < 20)); then col="1;$C_W"; fi
+        line=$(glitch "${rows[r]}" "$p")
+        printf '\e[K  %*s%s\n' "$off" '' "$(c "$col" "$line")"
+      done
+      printf '\e[3A'; sleep 0.07
+    done
+    show_cursor
+  fi
+  for r in 0 1 2; do printf '%s  %s\n' "$EL" "$(c "1;$C_R" "${rows[r]}")"; done
+}
+
+boot() {
+  local s i
+  if ((ANIM)); then
+    for i in 1 2 3 4 5; do printf '  %s\n' "$(c "$C_D" "$(hexline)")"; sleep 0.025; done
+    for s in "scanning NETWATCH relay" "bypassing ICE layer 1/3" "bypassing ICE layer 2/3" "bypassing ICE layer 3/3" "loading daemon injector"; do
+      printf '  %s %s %s' "$(c "$C_R" '>>')" "$s" "$(c "$C_D" "$(rep '.' $((34-${#s})))")"
+      sleep 0.09
+      printf ' %s\n' "$(c "1;$C_Y" '[ OK ]')"
+    done
+    flash "ACCESS GRANTED" "$C_Y"
+  fi
+  info "operator  ${USER:-$(id -un)}@${HOSTNAME:-node}"
+  info "payload   $(tilde "$REPO")"
+}
+
 banner() {
-  ((FANCY)) && printf '\e[2J\e[H' || true
-  local t1='E D G E R U N N E R  //  dotfiles installer'
-  local t2='hyprland · quickshell · kitty · greetd'
+  ((ANIM)) && printf '\e[2J\e[H' || true
   echo
-  echo "  $(c "$C_Y" "▛$(rep '▀' $((W-2)))▜")"
-  banner_row "$t1" "$(c "1;$C_C" 'E D G E R U N N E R')  $(c "$C_M" '//')  $(c "$C_D" 'dotfiles installer')"
-  banner_row "$t2" "$(c "$C_D" "$t2")"
-  echo "  $(c "$C_Y" "▙$(rep '▄' $((W-2)))▟")"
+  logo
+  echo "  $(c "$C_Y" '✚') $(c "1;$C_T" 'DOTFILES BREACH PROTOCOL') $(c "$C_D" '// hyprland · quickshell · kitty · greetd')"
+  echo
+  boot
   echo
 }
 
-section() { echo; echo "  $(c "1;$C_M" "▌ $1")"; echo "  $(c "$C_D" "$(rep '─' $((W-2)))")"; }
+section() {
+  local t=${1^^} p
+  echo
+  if ((ANIM)); then
+    for p in 90 65 40 15; do printf '\r\e[K  %s %s' "$(c "$C_R" '▌▌')" "$(c "1;$C_W" "$(glitch "$t" "$p")")"; sleep 0.03; done
+  fi
+  printf '%s  %s %s %s%s\n' "$CR" "$(c "$C_R" '▌▌')" "$(c "1;$C_W" "$t")" "$(c "$C_R2" '▓▒░')" "$(c "$C_D" "$(rep '─' $((W-12-${#t})))")"
+}
 
-# panel "Title" line1 line2 ...   (plain text lines only)
+# panel "Title" line1 line2 ...   (plain text lines only) - a red HUD window
 panel() {
   local title=$1; shift
-  local inner=$((W-4)) line
-  printf '  %s%s%s\n' "$(c "$C_C" '╭─ ')" "$(c "1;$C_Y" "$title")" "$(c "$C_C" " $(rep '─' $((W-5-${#title})))╮")"
+  local inner=$((W-4)) line hex fill bc="" i nbc=18
+  ((${#title} > W-24)) && title="${title:0:$((W-25))}…"
+  hex=$(printf '0x%04X' $((RANDOM%65536)))
+  fill=$((W-18-${#title}))
+  printf '  %s%s%s%s%s%s%s\n' "$(c "$C_R2" '┏━[ ')" "$(c "1;$C_R" "$title")" "$(c "$C_R2" " ]$(rep '━' "$fill")")" \
+         "$(c "$C_D" '[ ')" "$(c "$C_Y" "$hex")" "$(c "$C_D" ' ]')" "$(c "$C_R2" '━┓')"
   for line in "$@"; do
     ((${#line} > inner)) && line="${line:0:$((inner-1))}…"
-    printf '  %s %-*s %s\n' "$(c "$C_C" '│')" "$inner" "$line" "$(c "$C_C" '│')"
+    printf '  %s %s %s\n' "$(c "$C_R2" '┃')" "$(c "$C_T" "$(printf '%-*s' "$inner" "$line")")" "$(c "$C_R2" '┃')"
   done
-  printf '  %s\n' "$(c "$C_C" "╰$(rep '─' $((W-2)))╯")"
+  for ((i=0;i<nbc;i++)); do bc+=${BAR[RANDOM%${#BAR[@]}]}; done
+  printf '  %s%s%s\n' "$(c "$C_R2" '┗━ ')" "$(c "$C_D" "$bc")" "$(c "$C_R2" " $(rep '━' $((W-5-nbc)))┛")"
 }
 
 # bar current total label
 bar() {
-  local cur=$1 tot=$2 label=${3:-} wd=28 f pct
+  local cur=$1 tot=$2 label=${3:-} wd=30 f pct i ff="" ee=""
+  ((FANCY)) || return 0
   ((tot > 0)) || tot=1
   f=$((cur*wd/tot)); pct=$((cur*100/tot))
-  if ((FANCY)); then
-    printf '\r\e[K  %s%s %3d%%  %s' "$(c "$C_M" "$(rep '█' "$f")")" "$(c "$C_D" "$(rep '░' $((wd-f)))")" "$pct" "$(c "$C_D" "${label: -28}")"
-  fi
+  for ((i=0;i<wd;i++)); do
+    if ((i < f)); then
+      if ((RANDOM%14 == 0 && cur < tot)); then ff+=$'\e[38;5;231m'"${GLY[RANDOM%${#GLY[@]}]}"$'\e[38;5;196m'; else ff+='▰'; fi
+    else ee+='▱'; fi
+  done
+  ((${#label} > 24)) && label="…${label: -23}"
+  printf '\r\e[K  %s%s%s%s %s %3d%%  %s' "$(c "$C_R2" '▐')" "$(c "$C_R" "$ff")" "$(c "$C_D" "$ee")" "$(c "$C_R2" '▌')" \
+         "$(c "$C_Y" "$(printf '0x%02X' $((cur & 255)))")" "$pct" "$(c "$C_D" "$label")"
 }
 bar_done() { ((FANCY)) && printf '\r\e[K' || true; }
 
@@ -112,11 +190,12 @@ bar_done() { ((FANCY)) && printf '\r\e[K' || true; }
 spin() {
   local label=$1; shift
   if ((!FANCY)); then info "$label"; "$@" && return 0; warn "$label: finished with warnings"; return 0; fi
-  local fr=(⠋ ⠙ ⠹ ⠸ ⠼ ⠴ ⠦ ⠧ ⠇ ⠏) i=0 pid rc=0
+  local fr=('▰▱▱▱▱' '▱▰▱▱▱' '▱▱▰▱▱' '▱▱▱▰▱' '▱▱▱▱▰' '▱▱▱▰▱' '▱▱▰▱▱' '▱▰▱▱▱') i=0 pid rc=0 shown
   hide_cursor
   "$@" & pid=$!
   while kill -0 "$pid" 2>/dev/null; do
-    printf '\r  %s %s' "$(c "$C_C" "${fr[i%10]}")" "$label"
+    shown=$label; ((RANDOM%6 == 0)) && shown=$(glitch "$label" 7)
+    printf '\r\e[K  %s %s' "$(c "$C_R" "${fr[i%8]}")" "$shown"
     i=$((i+1)); sleep 0.08
   done
   wait "$pid" || rc=$?
@@ -128,13 +207,13 @@ spin() {
 confirm() {
   [[ $YES == 1 ]] && return 0
   local a
-  read -rp "  $(c "1;$C_Y" '?') $1 $(c "$C_D" '[y/N]') " a || return 1
+  read -rp "  $(c "$C_D" '[') $(c "1;$C_Y" 'AUTHORIZE') $(c "$C_D" ']') $1 $(c "$C_D" '[y/N]') " a || return 1
   [[ $a =~ ^[Yy]$ ]]
 }
 
 SUDO_KEEPALIVE=""
 need_sudo() {
-  info "sudo needed for system files (greetd, /etc, ...)"
+  info "elevating privileges (sudo) for system files"
   sudo -v || die "sudo failed"
   ( while true; do sudo -n true 2>/dev/null; sleep 50; kill -0 "$$" 2>/dev/null || exit; done ) &
   SUDO_KEEPALIVE=$!
@@ -149,18 +228,18 @@ menu() {
   local items labels sel=0 key k2 i n
   if is_installed; then
     items=(update uninstall pull status quit)
-    labels=("Update      sync with the latest repo version" "Uninstall   restore your old setup" "Pull        copy live configs into the repo" "Status      what's installed + backup path" "Quit")
+    labels=("UPDATE      patch daemons to the latest version" "UNINSTALL   purge daemons, restore old setup" "PULL        exfiltrate live configs into repo" "STATUS      node + backup info" "QUIT        jack out")
   else
     items=(install pull status quit)
-    labels=("Install     back up current build & apply dotfiles" "Pull        copy live configs into the repo" "Status      what's installed + backup path" "Quit")
+    labels=("INSTALL     back up build & upload daemons" "PULL        exfiltrate live configs into repo" "STATUS      node + backup info" "QUIT        jack out")
   fi
   n=${#items[@]}
-  echo "  $(c "$C_D" '↑/↓ or j/k to move · enter to select · q to quit')"; echo
+  echo "  $(c "$C_D" '[') $(c "1;$C_R" 'SELECT PROTOCOL') $(c "$C_D" ']')  $(c "$C_D" '↑/↓ or j/k · enter · q')"; echo
   hide_cursor
   while true; do
     for i in "${!items[@]}"; do
-      if ((i == sel)); then printf '\e[K  %s %s\n' "$(c "$C_M" '▶')" "$(c "1;$C_Y" "${labels[i]}")"
-      else printf '\e[K    %s\n' "$(c "$C_D" "${labels[i]}")"; fi
+      if ((i == sel)); then printf '\e[K  %s %s\n' "$(c "$C_R" '▶')" "$(c "1;38;5;16;48;5;196" " 0x0$((i+1))  ${labels[i]} ")"
+      else printf '\e[K     %s  %s\n' "$(c "$C_D" "0x0$((i+1))")" "$(c "$C_T" "${labels[i]}")"; fi
     done
     IFS= read -rsn1 key || key=q
     if [[ $key == $'\e' ]]; then k2=""; read -rsn2 -t 0.05 k2 || true; key=$k2; fi
@@ -214,7 +293,7 @@ snap_meta() {
 }
 
 full_snapshot() {
-  section "Backing up your current build"
+  section "Trace buffer // backup"
   info "-> $(tilde "$BACKUP_DIR")"
   mkdir -p "$BACKUP_DIR"
 
@@ -261,7 +340,7 @@ collect() { # prints "kind<TAB>src<TAB>dest"
 }
 
 do_install() {
-  section "Install"
+  section "Breach protocol // install"
   [[ -f $REPO/home/.config/hypr/hyprland.lua ]] \
     || warn "home/.config/hypr/hyprland.lua is not in the repo yet - run './install.sh pull' first"
   local plan=() line kind src dest
@@ -276,7 +355,7 @@ do_install() {
   ((${#plan[@]} > max)) && rows+=("… and $((${#plan[@]}-max)) more files")
   [[ -f $REPO/home/.bashrc ]] && rows+=("▸ home  ~/.bashrc  (managed block appended)")
   [[ -f $REPO/extras/dconf.ini ]] && rows+=("◆ dconf  extras/dconf.ini  (asked separately)")
-  panel "Will be installed (${#plan[@]} files)" "${rows[@]}"
+  panel "PAYLOAD // ${#plan[@]} files" "${rows[@]}"
   echo
   confirm "Install the above? Your current build gets backed up first." || die "aborted"
 
@@ -286,7 +365,7 @@ do_install() {
   mkdir -p "$STATE_DIR"; : > "$MANIFEST"
   echo "BACKUP_DIR=$BACKUP_DIR" > "$META"
 
-  section "Copying files"
+  section "Uploading daemons"
   local i=0 total=${#plan[@]}
   for line in "${plan[@]}"; do
     IFS=$'\t' read -r kind src dest <<< "$line"
@@ -319,13 +398,13 @@ do_install() {
   fi
 
   if [[ -f $REPO/packages.txt ]] && confirm "Install packages from packages.txt?"; then
-    section "Packages"
+    section "Fetching toolchain // packages"
     local pm=(sudo pacman -S --needed --noconfirm); command -v yay >/dev/null && pm=(yay -S --needed --noconfirm)
     grep -vE '^\s*(#|$)' "$REPO/packages.txt" | xargs "${pm[@]}" || warn "some packages failed"
   fi
 
   echo
-  panel "INSTALLED" \
+  panel "BREACH SUCCESSFUL" \
     "Files:   $total" \
     "Backup:  $(tilde "$BACKUP_DIR")" \
     "" \
@@ -336,17 +415,17 @@ do_install() {
 
 # ------------------------------------------------------------- uninstall ---
 do_uninstall() {
-  section "Uninstall"
+  section "Purge protocol // uninstall"
   is_installed || die "not installed (no manifest at $MANIFEST)"
   # shellcheck disable=SC1090
   source "$META"
   [[ -d ${BACKUP_DIR:-} ]] || warn "backup dir ${BACKUP_DIR:-?} is gone - files will be removed but can't be restored"
-  panel "Restore point" "Backup:   $(tilde "${BACKUP_DIR:-?}")" "Entries:  $(grep -c . "$MANIFEST")"
+  panel "RESTORE POINT" "Backup:   $(tilde "${BACKUP_DIR:-?}")" "Entries:  $(grep -c . "$MANIFEST")"
   echo
   confirm "Uninstall Edgerunner-dotfiles and restore your old setup?" || die "aborted"
   need_sudo
 
-  section "Removing files"
+  section "Purging daemons"
   local kind path d i=0 total
   total=$(grep -c . "$MANIFEST" || true)
   while IFS=$'\t' read -r kind path; do
@@ -373,7 +452,7 @@ do_uninstall() {
 
   rm -rf "$STATE_DIR"
   echo
-  panel "RESTORED" \
+  panel "TRACES WIPED" \
     "Backup kept at: $(tilde "${BACKUP_DIR:-?}")" \
     "(full tarballs inside - delete it when you're happy)" \
     "" \
@@ -386,7 +465,7 @@ do_uninstall() {
 # ones, removes files that were deleted upstream. Keeps your ORIGINAL backup, and
 # saves anything it overwrites to <backup>/updates/<timestamp>/ first.
 do_update() {
-  section "Update"
+  section "Patch protocol // update"
   is_installed || die "not installed yet - run './install.sh install' first"
   # shellcheck disable=SC1090
   source "$META"
@@ -426,7 +505,7 @@ do_update() {
 
   local n=$(( ${#add[@]} + ${#chg[@]} + ${#rem[@]} + rc_change ))
   if ((n == 0)); then
-    echo; panel "UP TO DATE" "Nothing to change - the installed files match the repo."
+    echo; panel "NO DELTA" "Nothing to change - the installed files match the repo."
     return 0
   fi
 
@@ -437,7 +516,7 @@ do_update() {
   ((rc_change)) && rows+=("~ changed  ~/.bashrc (managed block)")
   local more=$(( ${#rows[@]} - max ))
   ((more > 0)) && rows=("${rows[@]:0:$max}" "… and $more more")
-  panel "Update: ${#add[@]} new, ${#chg[@]} changed, ${#rem[@]} removed" "${rows[@]}"
+  panel "DELTA // ${#add[@]} new ${#chg[@]} changed ${#rem[@]} removed" "${rows[@]}"
   echo
   confirm "Apply the update? (files it overwrites are saved to the backup first)" || die "aborted"
 
@@ -454,7 +533,7 @@ do_update() {
     else sudo mkdir -p "$(dirname "$3")"; sudo cp -a --remove-destination "$2" "$3"; fi
   }
 
-  section "Applying"
+  section "Patching daemons"
   local i=0 total=$(( ${#add[@]} + ${#chg[@]} + ${#rem[@]} ))
   for line in "${add[@]}"; do
     IFS=$'\t' read -r kind src dest <<< "$line"
@@ -504,7 +583,7 @@ do_update() {
   [[ -d $HOME/commands ]] && chmod +x "$HOME"/commands/* 2>/dev/null || true
 
   echo
-  panel "UPDATED" \
+  panel "DAEMONS PATCHED" \
     "+${#add[@]} new   ~${#chg[@]} changed   -${#rem[@]} removed" \
     "Old versions saved in: $(tilde "$UPD")" \
     "" \
@@ -514,7 +593,7 @@ do_update() {
 
 # ------------------------------------------------------------------ pull ---
 do_pull() {
-  section "Pull live configs into the repo"
+  section "Exfiltrate configs // pull"
   local p f rel n=0 list=()
   for p in "${PULL[@]}"; do
     [[ -e $HOME/$p ]] || { warn "skip ~/$p (not found)"; continue; }
@@ -540,7 +619,7 @@ do_pull() {
     ((shown++ < max)) && rows+=("▸ ${dest#"$REPO"/}")
   done
   ((${#list[@]} > max)) && rows+=("… and $((${#list[@]}-max)) more files")
-  panel "Files to pull (${#list[@]})" "${rows[@]}"
+  panel "EXFIL QUEUE // ${#list[@]} files" "${rows[@]}"
   echo
   warn "The repo is PUBLIC - skim the list for tokens, passwords or personal paths first."
   confirm "Copy these ${#list[@]} files into the repo (overwrites repo copies)?" || die "aborted"
@@ -567,15 +646,15 @@ do_pull() {
 }
 
 do_status() {
-  section "Status"
+  section "Node status"
   if is_installed; then
     # shellcheck disable=SC1090
     source "$META"
-    panel "● INSTALLED" "Entries:  $(grep -c . "$MANIFEST")" "Backup:   $(tilde "$BACKUP_DIR")"
+    panel "● DAEMON ACTIVE // installed" "Entries:  $(grep -c . "$MANIFEST")" "Backup:   $(tilde "$BACKUP_DIR")"
   else
     local olds=() b
     for b in "$BACKUP_ROOT"/*; do [[ -e $b ]] && olds+=("$(tilde "$b")"); done
-    panel "○ NOT INSTALLED" "${olds[@]:-No old backups found}"
+    panel "○ NODE CLEAN // not installed" "${olds[@]:-No old backups found}"
   fi
 }
 
@@ -586,6 +665,7 @@ cmd=""
 for a in "$@"; do
   case $a in
     -y|--yes) YES=1 ;;
+    --fast) ANIM=0 ;;
     install|uninstall|status|toggle|pull|update) cmd=$a ;;
     --skip-pull) SKIP_PULL=1 ;;
     -h|--help) usage; exit 0 ;;
@@ -608,7 +688,7 @@ case $cmd in
       pull)      do_pull ;;
       update)    do_update ;;
       status)    do_status ;;
-      *)         echo "  $(c "$C_D" 'bye.')" ;;
+      *)         echo "  $(c "$C_D" '>> jacked out.')" ;;
     esac ;;
   install)   is_installed && die "already installed - run './install.sh uninstall' first"; do_install ;;
   uninstall) do_uninstall ;;
