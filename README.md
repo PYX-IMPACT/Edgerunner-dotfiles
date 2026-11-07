@@ -273,7 +273,7 @@ Built on the shoulders of the Hyprland, Waybar, Quickshell, and Arch communities
 
 Feel free to take whatever's useful. A star is appreciated but never required.
 
-**'background'** <a href="https://wallhaven.cc/w/o599zp">https://whvn.cc/o599zp</a> by zireael
+**`background`** <a href="https://wallhaven.cc/w/o599zp">https://whvn.cc/o599zp</a> by zireael
 
 <div align="center">
 
