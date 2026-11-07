@@ -35,7 +35,49 @@ The visual identity is built on a single palette (see [`// 02`](#-02-palette)) t
 
 ---
 
-## `// 01` THE STACK
+## `// 01` INSTALL
+
+```bash
+git clone <repo-url> Edgerunner-dotfiles
+cd Edgerunner-dotfiles
+./install.sh
+```
+
+Run it as your normal user. It uses `sudo` only for system files like `/etc/greetd`. You get a menu with Install, Update, Uninstall, Pull, Status and Quit. You can also call the commands directly:
+
+| Command | What it does |
+|---|---|
+| `./install.sh install` | Backs up your current setup, then installs the dotfiles |
+| `./install.sh update` | Pulls the latest version from git and applies only what changed |
+| `./install.sh uninstall` | Removes the dotfiles and restores your old setup |
+| `./install.sh status` | Shows what's installed and where the backup is |
+
+Add `-y` to skip prompts and `--fast` to skip the animations.
+
+## How the backup works
+
+Nothing is overwritten until your current setup is saved to `~/.dotfiles-backup/<date-time>/`:
+
+- **Archives of your files:** one tarball of your user configs (`~/.config`, shell rc files, themes, fonts, icons, `~/commands`) and one of the system files the installer can touch (`/etc/greetd`, systemd units, and similar).
+- **System state:** your package lists, enabled services, dconf/GTK settings and your Hyprland version.
+- **Originals:** the exact files the installer replaces are copied, so uninstall can put them back.
+
+Your `~/.bashrc` is never replaced. The installer appends a marked block, and uninstall removes that block cleanly.
+
+`uninstall` deletes the installed files and restores your originals from the backup. The backup folder is kept afterwards, so delete it yourself once you're happy.
+
+`update` saves anything it overwrites to `<backup>/updates/<date-time>/` first, and it never touches your original backup.
+
+## After installing
+
+Run `hyprctl reload`. Log out and back in if the greetd or shell files changed.
+
+Packages from `packages.txt` are only installed if you say yes, and uninstall leaves them installed.
+
+
+---
+
+## `// 02` THE STACK
 
 | Layer | Component | Role |
 |:--|:--|:--|
@@ -57,7 +99,7 @@ The visual identity is built on a single palette (see [`// 02`](#-02-palette)) t
 
 ---
 
-## `// 02` PALETTE
+## `// 03` PALETTE
 
 One palette, used everywhere. Neon on near-black.
 
@@ -74,7 +116,7 @@ One palette, used everywhere. Neon on near-black.
 
 ---
 
-## `// 03` REPO LAYOUT
+## `// 04` REPO LAYOUT
 
 ```text
 Edgerunner-dotfiles/
@@ -104,7 +146,7 @@ The `home/` folder mirrors your home directory exactly, so `home/.config/hypr` b
 
 ---
 
-## `// 04` INSTALL
+## `// 05` INSTALL
 
 > ⚠️ **Read before you run.** The install script touches your home directory and, with `sudo`, parts of `/etc` including the **login manager config**. Existing files are moved to `~/.dotfiles_backup/<timestamp>/` first, but if you only want some of this, copy the pieces by hand instead.
 
@@ -140,7 +182,7 @@ chmod +x install.sh
 
 ---
 
-## `// 05` CUSTOM COMMANDS
+## `// 06` CUSTOM COMMANDS
 
 Everything in `~/commands` is on `$PATH` (set in `.zshrc`), so these work from anywhere.
 
@@ -164,7 +206,7 @@ newcmd backup                              # start a new command
 
 ---
 
-## `// 06` THE SHELL
+## `// 07` THE SHELL
 
 The `.zshrc` is where a lot of the personality lives. Highlights:
 
@@ -181,7 +223,7 @@ The `.zshrc` is where a lot of the personality lives. Highlights:
 
 ---
 
-## `// 07` DEPENDENCIES
+## `// 08` DEPENDENCIES
 
 The full list lives in `packages.txt`, but the important ones are:
 
@@ -198,7 +240,7 @@ yay  pacseek  fresh
 
 ---
 
-## `// 08` SYSTEM-LEVEL CONFIG
+## `// 09` SYSTEM-LEVEL CONFIG
 
 A few things live outside the home directory and are installed to `/etc` by the script:
 
@@ -213,7 +255,7 @@ These need `sudo`, and a mistake in `greetd` can leave you without a graphical l
 
 ---
 
-## `// 09` KEYBINDINGS
+## `// 10` KEYBINDINGS
 
 | Keys | Action |
 |:--|:--|
@@ -225,7 +267,7 @@ These need `sudo`, and a mistake in `greetd` can leave you without a graphical l
 
 ---
 
-## `// 10` KEEPING IT UPDATED
+## `// 11` KEEPING IT UPDATED
 
 The repo is a **snapshot** of my live configs. I keep it current with two private helper scripts that aren't shipped in this repo:
 
@@ -239,7 +281,7 @@ dotpush "tweak waybar colors"
 
 ---
 
-## `// 11` TROUBLESHOOTING
+## `// 12` TROUBLESHOOTING
 
 | Symptom | Likely cause |
 |:--|:--|
@@ -252,7 +294,7 @@ dotpush "tweak waybar colors"
 
 ---
 
-## `// 12` GALLERY
+## `// 13` GALLERY
 
 <p align="center">
   <img src="Gallery/terminalhaven.png" alt="Terminal" width="100%">
@@ -267,7 +309,7 @@ dotpush "tweak waybar colors"
 
 ---
 
-## `// 13` CREDITS & LICENSE
+## `// 14` CREDITS & LICENSE
 
 Built on the shoulders of the Hyprland, Waybar, Quickshell, and Arch communities, and the endless inspiration of r/unixporn.
 
@@ -278,6 +320,8 @@ Feel free to take whatever's useful. A star is appreciated but never required.
 <div align="center">
 
 ---
+
+## `// 15` KOFI Support
 
 [![Ko-fi](Gallery/kofi-badge.svg)](https://ko-fi.com/pyx_impact)
 
