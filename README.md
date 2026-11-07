@@ -277,7 +277,7 @@ Feel free to take whatever's useful. A star is appreciated but never required.
 
 ---
 
-[![Ko-fi](https://img.shields.io/badge/KO--FI-Chuck_some_Eddies-fcee0a?style=for-the-badge&logo=kofi&logoColor=red&labelColor=FB0A26)](https://ko-fi.com/pyx_impact)
+[![Ko-fi](https://img.shields.io/badge/KO--FI-Chuck_some_Eddies-fcee0a?style=for-the-badge&logo=kofi&logoColor=black&labelColor=FB0A26)](https://ko-fi.com/pyx_impact)
 
 If you like this feel free to support me, you can [support on Ko-fi](https://ko-fi.com/pyx_impact).
 
