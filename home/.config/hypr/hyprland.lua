@@ -265,6 +265,21 @@ hl.gesture({
 })
 
 hl.gesture({
+    fingers = 3,
+    direction = "down",
+    action = "float",
+    mode = "float"
+})
+
+hl.gesture({
+    fingers = 3,
+    direction = "up",
+    action = "float",
+    mode = "tile"
+})
+
+
+hl.gesture({
   fingers   = 4,
   direction = "swipe",
   action    = "move",
