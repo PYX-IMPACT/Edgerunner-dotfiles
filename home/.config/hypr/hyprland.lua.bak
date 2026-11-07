@@ -20,7 +20,7 @@ hl.monitor({
 -- Set programs that you use
 local terminal    = "kitty"
 local fileManager = "thunar"
-local menu        = "rofi -show drun"
+local menu        = "qs -c launcher ipc call launcher toggle"
 
 
 -------------------
@@ -51,7 +51,7 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("hyprctl setcursor Edgerunners2 20")
     hl.exec_cmd("/home/whoami/commands/wall")
     hl.exec_cmd("waybar")
-    hl.exec_cmd("noctalia")
+    hl.exec_cmd("qs -c launcher")
 end)
 
 
@@ -296,6 +296,9 @@ hl.bind(mainMod .. " + R", hl.dsp.exec_cmd(menu))
 hl.bind(mainMod .. " + P", hl.dsp.window.pseudo())
 hl.bind(mainMod .. " + J", hl.dsp.layout("togglesplit"))    -- dwindle only
 
+hl.bind(mainMod .. " + W", hl.dsp.exec_cmd("firefox"))
+
+
 -- numlock
 hl.config({
   input = {
@@ -363,13 +366,6 @@ hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = tr
 
 hl.bind(mainMod .. " + N", hl.dsp.exec_cmd("qs -c notifs ipc call media toggle"))
 
-
-local ipc = "noctalia msg "
-
-hl.bind(mainMod .. " + W",     hl.dsp.exec_cmd(ipc .. "panel-toggle launcher"))
-hl.bind(mainMod .. " + A",     hl.dsp.exec_cmd(ipc .. "panel-toggle control-center"))
-hl.bind(mainMod .. " + comma", hl.dsp.exec_cmd(ipc .. "settings-toggle"))
-hl.bind("ALT + Tab",           hl.dsp.exec_cmd(ipc .. "window-switcher"))
 
 
 --------------------------------
