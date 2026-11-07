@@ -11,7 +11,7 @@ local FX = {
   sparks          = true,   -- universal red spark overlay (Quickshell, see sparks/shell.qml)
   spinning_border = false,  -- rotating gradient border (re-renders every frame: costs GPU/battery)
   glow            = true,   -- red-hot glow around the focused window
-  rofi_dim        = true,   -- dim everything behind the SUPER+R menu
+  rofi_dim        = false,  -- dim everything behind the SUPER+R menu (also dims the spark overlay, so off)
 }
 
 -- ------------------------------------------------------------------ curves --
@@ -20,13 +20,15 @@ hl.curve("expo",     { type = "bezier", points = { {0.16, 1.00}, {0.30, 1.00} } 
 hl.curve("cut",      { type = "bezier", points = { {0.70, 0.00}, {0.20, 1.00} } })  -- aggressive in-out
 hl.curve("inExpo",   { type = "bezier", points = { {0.70, 0.00}, {0.84, 0.00} } })  -- slow tick, then gone
 hl.curve("linear",   { type = "bezier", points = { {0, 0}, {1, 1} } })
+hl.curve("hold",     { type = "bezier", points = { {0.90, 0.00}, {1.00, 0.00} } })  -- nearly invisible for ~60% of the time, then snaps in
 
 -- -------------------------------------------------------------- animations --
 hl.animation({ leaf = "global", enabled = true, speed = 3, bezier = "expo" })
 
 -- 1) APP OPENING: near-full-size pop (only 8% travel) + fast fade = a hard "cut in"
-hl.animation({ leaf = "windowsIn",  enabled = true, speed = 2.5, bezier = "expo",   style = "popin 92%" })
-hl.animation({ leaf = "fadeIn",     enabled = true, speed = 1.5, bezier = "linear" })
+-- held back ~110ms (the "hold" curve) so the red spark starts before the window shows. Longer speed = longer delay.
+hl.animation({ leaf = "windowsIn",  enabled = true, speed = 1.8, bezier = "hold",   style = "popin 92%" })
+hl.animation({ leaf = "fadeIn",     enabled = true, speed = 1.8, bezier = "hold" })
 
 -- 3) CLOSING APPS: held for a beat, then snapped out
 hl.animation({ leaf = "windowsOut", enabled = true, speed = 1.8, bezier = "inExpo", style = "popin 96%" })

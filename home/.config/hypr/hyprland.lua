@@ -52,7 +52,6 @@ hl.on("hyprland.start", function()
     hl.exec_cmd("/home/whoami/commands/wall")
     hl.exec_cmd("waybar")
     hl.exec_cmd("qs -c launcher")
-    hl.exec_cmd("quickshell -c sparks &")
 end)
 
 

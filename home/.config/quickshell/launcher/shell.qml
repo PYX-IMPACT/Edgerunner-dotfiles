@@ -34,6 +34,8 @@ PanelWindow {
     property real reveal: 0          // 0..1, quantised into hard steps when applied
     property bool closing: false
     property bool blink: false
+    property bool go: false          // flips true after openDelay: rows and text start animating then
+    readonly property int openDelay: 140   // ms the panel is held back so the sparks start first
     readonly property int steps: 7
 
     property string query: ""
@@ -81,6 +83,8 @@ PanelWindow {
     function close() {
         if (!visible || closing) return
         closing = true
+        openAnim.stop()
+        Quickshell.execDetached(["qs", "-c", "sparks", "ipc", "call", "sparks", "menuclose"])   // start the close spark now
         closeAnim.restart()
     }
 
@@ -100,11 +104,11 @@ PanelWindow {
     onVisibleChanged: if (visible) {
         closing = false
         reveal = 0
+        go = false
         root.opacity = 1
         query = ""; input.text = ""
         refresh()
         input.forceActiveFocus()
-        hdr.run(); statusText.run()
         openAnim.restart()
     }
 
@@ -137,6 +141,8 @@ PanelWindow {
 
             SequentialAnimation {
                 id: openAnim
+                PauseAnimation { duration: win.openDelay }
+                ScriptAction { script: { win.go = true; hdr.run(); statusText.run() } }
                 NumberAnimation { target: win;  property: "reveal";  to: 1;   duration: 140 }
                 NumberAnimation { target: root; property: "opacity"; to: 0.4; duration: 35 }
                 NumberAnimation { target: root; property: "opacity"; to: 1;   duration: 45 }
@@ -314,7 +320,11 @@ PanelWindow {
 
                             onSelChanged: if (sel) { hit = true; hitTimer.restart() }
                             Timer { id: hitTimer; interval: 55; onTriggered: row.hit = false }
-                            Component.onCompleted: enter.start()
+                            Component.onCompleted: if (win.go) enter.start()
+                            Connections {                     // panel is released after the open delay
+                                target: win
+                                function onGoChanged() { if (win.go) { enter.restart(); nameText.run() } }
+                            }
                             SequentialAnimation {
                                 id: enter
                                 PauseAnimation { duration: row.index * 22 }
@@ -354,6 +364,7 @@ PanelWindow {
                                         source: Quickshell.iconPath(row.modelData.icon, true)
                                     }
                                     DecryptText {
+                                        id: nameText
                                         anchors.verticalCenter: parent.verticalCenter
                                         target: row.modelData.name.toUpperCase()
                                         stepMs: 20; perStep: 2

@@ -113,9 +113,51 @@ ShellRoot {
             }
         }
     }
-    Timer { id: ldelay; interval: 90; onTriggered: lq.running = true }
+    Timer { id: ldelay; interval: 45; onTriggered: lq.running = true }
 
-    Timer { id: delay; interval: 70; onTriggered: { root.settled = true; query.running = true } }
+    // Fast path for new windows: find the window by its address (no waiting for focus to move) and fire right away.
+    property string openAddr: ""
+    property int openTries: 0
+    Process {
+        id: cq
+        command: ["hyprctl", "-j", "clients"]
+        stdout: StdioCollector {
+            onStreamFinished: {
+                var arr
+                try { arr = JSON.parse(this.text) } catch (e) { return }
+                for (var i = 0; i < arr.length; i++) {
+                    var c = arr[i]
+                    if (c.address === root.openAddr && c.at && c.size && c.size[0] > 50 && c.size[1] > 50) {
+                        root.geo = { x: c.at[0], y: c.at[1], w: c.size[0], h: c.size[1] }
+                        root.fire(root.geo, "open")
+                        return
+                    }
+                }
+                if (root.openTries < 3) { root.openTries++; retry.restart() }   // not listed or sized yet: ask again shortly
+            }
+        }
+    }
+    Timer { id: retry; interval: 25; onTriggered: cq.running = true }
+    function openFast(data) {
+        openAddr = "0x" + data.split(",")[0]
+        openTries = 0
+        cq.running = true
+    }
+
+    // The launcher calls this the moment it starts closing, so the close effect does not wait for the layer to unmap.
+    property bool menuEarlyClose: false
+    Timer { id: ecClear; interval: 1500; onTriggered: root.menuEarlyClose = false }
+    IpcHandler {
+        target: "sparks"
+        function menuclose(): void {
+            if (!root.lrect) return
+            root.menuEarlyClose = true
+            ecClear.restart()
+            root.fire(root.lrect, "close")
+        }
+    }
+
+    Timer { id: delay; interval: 25; onTriggered: { root.settled = true; query.running = true } }
     function ask(kind) { pending = kind; delay.restart() }      // fire an effect after the layout settles
     function refresh() { query.running = true }                 // just update the cached rect, never touches pending
 
@@ -123,14 +165,19 @@ ShellRoot {
         target: Hyprland
         function onRawEvent(event) {
             switch (event.name) {
-            case "openwindow":         root.ask("open"); break           // wait for the layout to settle
+            case "openwindow":         root.openFast(event.data); break  // look the window up by address and fire at once
             case "closewindow":        root.fire(root.geo, "close"); break   // use the cached rect: window is gone
             case "changefloatingmode": root.ask(event.data.split(",")[1] === "1" ? "float" : "tile"); break
             case "movewindowv2":       root.ask("move"); break
             case "activewindowv2":     root.refresh(); break
             case "workspacev2":        root.onWorkspace(event.data); break               // just refresh the cached rect
             case "openlayer":          if (event.data === "launcher" || event.data === "rofi") ldelay.restart(); break      // wait for the panel to size itself
-            case "closelayer":         if ((event.data === "launcher" || event.data === "rofi") && root.lrect) root.fire(root.lrect, "close"); break
+            case "closelayer":
+                if ((event.data === "launcher" || event.data === "rofi") && root.lrect) {
+                    if (root.menuEarlyClose) root.menuEarlyClose = false       // already fired when the menu began closing
+                    else root.fire(root.lrect, "close")
+                }
+                break
             }
         }
     }
