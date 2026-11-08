@@ -344,7 +344,7 @@ Feel free to take whatever's useful. A star is appreciated but never required.
 If you like this feel free to support me, you can [support on Ko-fi](https://ko-fi.com/pyx_impact).
 
 ```text
-> END OF TRANSMISSION_
+> © 2026 PYX-IMPACT // END OF TRANSMISSION_ 
 ```
 
 </div>
